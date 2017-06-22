@@ -30,13 +30,13 @@ import (
 // userCmd represents the user command
 var userCmd = &cobra.Command{
 	Use:   "user",
-	Short: "Creates a new config file in your home directory with the appropriate configs.",
+	Short: "Creates or updates a new config file in your home directory with the appropriate configs.",
 	Long: `
-Creates a new config file in your home directory with the appropriate configs.
+Creates or updates a new config file in your home directory with the appropriate configs.
 
 auto init user -u "Mike Lloyd" -e "mike.lloyd@r3t.io"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		initialiser.NewUser(user, email)
+		initialiser.UpdateUser(user, email)
 	},
 }
 

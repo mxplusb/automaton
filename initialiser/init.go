@@ -25,25 +25,41 @@ import (
 	"log"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"fmt"
+	"github.com/mxplusb/automaton/lib"
 )
 
 func NewWorkspace(cloneURL string, update bool) {
 	ws := new(WorkSpace)
 	ws.logger = logrus.New()
+	ws.key = lib.GetRepoName(cloneURL)
 	ws.ManifestURL = cloneURL
 	location, err := os.Getwd()
 	if err != nil {
 		log.Fatal()
 	}
+
+	ws.loadViper()
+
 	ws.Parent = &Parent{
 		Location: location,
 		Update:   update,
 	}
-	localViper := viper.GetViper()
+
+	ws.logger.Infof("Initialising a new workspace in %s/%s", location, ws.key)
+
+	if err := ws.Clone(); err != nil {
+		ws.logger.Fatalf("Cloning workspace manifest failed.")
+	}
+
+	ws.logger.Infof("WorkSpace created. Use 'auto clone' to bring everything down.")
+
+	ws.viper.Set(ws.key, ws)
 }
 
-func NewUser(user, email string) {
+func UpdateUser(user, email string) {
 	localViper := viper.GetViper()
 	localViper.Set("user", user)
 	localViper.Set("email", email)
+	fmt.Printf("Updated user to %s <%s>", user, email)
 }

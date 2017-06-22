@@ -31,7 +31,6 @@ var log = logrus.New()
 func init() {
 	log.Formatter = new(prefixed.TextFormatter)
 	log.Level = logrus.DebugLevel
-
 }
 
 func main() {
